@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ar">
+<html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,192 +9,171 @@
 
     <style>
         :root {
-            --gold: #C5A059;
-            --blue: #006EB7;
-            --dark-blue: #004a7c;
-            --white: #ffffff;
-            --glass: rgba(255, 255, 255, 0.1);
+            --gold: #D4AF37;
+            --blue: #005696;
+            --dark-bg: #0a0e14;
+            --glass-bg: rgba(255, 255, 255, 0.05);
+            --border: rgba(212, 175, 55, 0.2);
         }
 
-        body, html {
-            margin: 0; padding: 0; height: 100%;
-            font-family: 'Poppins', 'Segoe UI', Tahoma, sans-serif;
-            background: linear-gradient(135deg, #0d1117 0%, #004a7c 100%);
-            color: var(--white); overflow: hidden;
-        }
-
-        /* واجهة الدخول التسويقية */
-        #welcome-screen {
-            position: fixed; inset: 0; z-index: 999;
-            background: radial-gradient(circle at center, #1a2333 0%, #080b12 100%);
+        body {
+            margin: 0; padding: 0; height: 100vh;
+            background-color: var(--dark-bg);
+            background-image: radial-gradient(circle at 50% 50%, #1a2a3a 0%, #0a0e14 100%);
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
             display: flex; justify-content: center; align-items: center;
-            backdrop-filter: blur(20px); transition: 0.8s ease-in-out;
+            color: white; overflow: hidden;
         }
 
-        .welcome-card {
-            background: var(--glass);
-            border: 1px solid rgba(255,255,255,0.1);
-            padding: 40px; border-radius: 30px;
-            width: 90%; max-width: 450px; text-align: center;
-            box-shadow: 0 25px 50px rgba(0,0,0,0.5);
-            animation: fadeIn 1s ease;
+        /* حاوية الشات الرئيسية */
+        .chat-container {
+            width: 95%; max-width: 500px; height: 85vh;
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border-radius: 30px;
+            border: 1px solid var(--border);
+            display: flex; flex-direction: column;
+            box-shadow: 0 40px 100px rgba(0,0,0,0.8);
+            position: relative;
         }
 
-        .welcome-card img { width: 150px; margin-bottom: 20px; }
+        /* الهيدر */
+        .header {
+            padding: 20px;
+            border-bottom: 1px solid var(--border);
+            display: flex; align-items: center; gap: 15px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 30px 30px 0 0;
+        }
+        .header img { width: 55px; filter: drop-shadow(0 0 5px var(--gold)); }
 
-        .input-group { margin-bottom: 20px; text-align: right; }
-        .input-group label { display: block; margin-bottom: 8px; font-size: 0.9rem; color: var(--gold); }
-        
+        .chat-content { flex: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 15px; }
+
+        /* فقاعة إدخال البيانات */
+        .onboarding-card {
+            background: rgba(255, 255, 255, 0.07);
+            padding: 25px; border-radius: 20px;
+            border-left: 4px solid var(--gold);
+            animation: slideIn 0.5s ease;
+        }
+        .onboarding-card h3 { margin-top: 0; color: var(--gold); font-size: 1.1rem; }
+
         input, select {
-            width: 100%; padding: 15px; border-radius: 12px;
-            border: 1px solid rgba(255,255,255,0.2);
-            background: rgba(0,0,0,0.3); color: white;
-            font-size: 1rem; outline: none; transition: 0.3s;
+            width: 100%; padding: 12px; margin: 8px 0;
+            border-radius: 10px; border: 1px solid var(--border);
+            background: rgba(0,0,0,0.4); color: white; outline: none; box-sizing: border-box;
+        }
+        input:focus { border-color: var(--gold); }
+
+        .btn-gold {
+            background: linear-gradient(135deg, var(--gold), #f3d060);
+            color: #000; border: none; padding: 12px; border-radius: 10px;
+            font-weight: bold; cursor: pointer; width: 100%; margin-top: 10px;
         }
 
-        input:focus, select:focus { border-color: var(--gold); background: rgba(0,0,0,0.5); }
+        /* الرسائل */
+        .msg { padding: 14px 18px; border-radius: 18px; max-width: 85%; font-size: 0.95rem; line-height: 1.4; animation: pop 0.3s ease; }
+        .bot { background: #1e2733; align-self: flex-start; border-bottom-left-radius: 4px; border: 1px solid rgba(255,255,255,0.1); }
+        .user { background: var(--blue); align-self: flex-end; border-bottom-right-radius: 4px; }
 
-        .btn-start {
-            width: 100%; padding: 16px; border-radius: 12px;
-            border: none; background: linear-gradient(90deg, var(--gold), #e0bc7a);
-            color: #1a2333; font-weight: 800; font-size: 1.1rem;
-            cursor: pointer; transition: 0.3s; margin-top: 10px;
+        /* منطقة الكتابة (مخفية في البداية) */
+        .input-area {
+            padding: 20px; display: none; gap: 10px;
+            border-top: 1px solid var(--border);
+            background: rgba(0,0,0,0.2);
         }
 
-        .btn-start:hover { transform: translateY(-3px); box-shadow: 0 10px 20px rgba(197, 160, 89, 0.4); }
-
-        /* واجهة الشات */
-        #chat-interface {
-            display: none; height: 100vh;
-            justify-content: center; align-items: center;
-        }
-
-        .chat-window {
-            width: 95%; max-width: 550px; height: 90vh;
-            background: rgba(13, 17, 23, 0.8);
-            border-radius: 30px; border: 1px solid var(--glass);
-            display: flex; flex-direction: column; overflow: hidden;
-            box-shadow: 0 50px 100px rgba(0,0,0,0.8);
-        }
-
-        .chat-header {
-            background: linear-gradient(90deg, var(--blue), var(--dark-blue));
-            padding: 20px; display: flex; align-items: center; gap: 15px;
-        }
-
-        .chat-body { flex: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 15px; }
-
-        .msg { padding: 14px 18px; border-radius: 20px; max-width: 85%; font-size: 0.95rem; line-height: 1.5; }
-        .bot { background: #21262d; align-self: flex-start; border-bottom-left-radius: 2px; border: 1px solid var(--glass); }
-        .user { background: var(--blue); align-self: flex-end; border-bottom-right-radius: 2px; }
-
-        .chat-footer { padding: 20px; display: flex; gap: 10px; background: rgba(0,0,0,0.2); }
-
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes slideIn { from { opacity: 0; transform: translateX(20px); } }
+        @keyframes pop { from { transform: scale(0.95); opacity: 0; } }
     </style>
 </head>
 <body>
 
-<div id="welcome-screen">
-    <div class="welcome-card">
+<div class="chat-container">
+    <div class="header">
         <img src="https://upload.wikimedia.org/wikipedia/commons/d/d0/Logo_AtlantaSanad.png" alt="Logo">
-        <h2 style="margin-bottom: 30px;">Bienvenue | مرحباً بكم</h2>
-        
-        <div class="input-group">
-            <input type="text" id="reg-name" placeholder="الاسم الكامل / Nom Complet">
+        <div>
+            <div style="font-weight: bold; font-size: 1.1rem;">أطلنطا سند - سيدي قاسم</div>
+            <div style="font-size: 0.75rem; color: #aaa;">الوكالة الرقمية المعتمدة</div>
         </div>
-        
-        <div class="input-group">
-            <input type="tel" id="reg-phone" placeholder="رقم الهاتف / N° Téléphone">
-        </div>
+    </div>
 
-        <div class="input-group">
+    <div class="chat-content" id="chat-box">
+        <div class="onboarding-card" id="form-container">
+            <h3>مرحباً بك | Bienvenue</h3>
+            <p style="font-size: 0.85rem; margin-bottom: 15px;">المرجو ملء البيانات لبدء المحادثة :</p>
+            <input type="text" id="reg-name" placeholder="الاسم الكامل / Nom Complet">
+            <input type="tel" id="reg-phone" placeholder="الهاتف / Téléphone">
             <select id="reg-lang">
-                <option value="" disabled selected>اختيار اللغة / Choisir la Langue</option>
-                <option value="ar">العربية (الدارجة)</option>
+                <option value="ar">العربية / الدارجة</option>
                 <option value="fr">Français</option>
             </select>
+            <button class="btn-gold" onclick="submitData()">تأكيد البيانات | Valider</button>
         </div>
-
-        <button class="btn-start" onclick="initChat()">ابدأ المحادثة | Démarrer</button>
     </div>
-</div>
 
-<div id="chat-interface">
-    <div class="chat-window">
-        <div class="chat-header">
-            <img src="https://upload.wikimedia.org/wikipedia/commons/d/d0/Logo_AtlantaSanad.png" width="50">
-            <div>
-                <div style="font-weight: bold;">AtlantaSanad - Sidi Kacem</div>
-                <div style="font-size: 0.7rem; color: #00ff88;">Assistant Intelligent Online</div>
-            </div>
-        </div>
-        <div class="chat-body" id="chat-box"></div>
-        <div class="chat-footer">
-            <input type="text" id="user-input" placeholder="Tapez votre message..." style="margin:0;">
-            <button onclick="sendMessage()" style="width: 80px; margin:0; padding:10px; font-size:0.9rem;">OK</button>
-        </div>
+    <div class="input-area" id="input-zone">
+        <input type="text" id="user-input" placeholder="اكتب سؤالك هنا..." style="margin:0;">
+        <button onclick="handleMsg()" style="width: 80px; margin:0; padding:10px; background:var(--gold); border:none; border-radius:10px; font-weight:bold; cursor:pointer;">OK</button>
     </div>
 </div>
 
 <script>
 let userData = { name: "", phone: "", lang: "ar" };
 
-const DB = {
+/* ================= KEYWORDS DATABASE ================= */
+const keywordsDB = {
     ar: {
-        welcome: "مرحباً {name}! كيف نقدر نعاونك اليوم بخصوص خدمات التأمين في سيدي قاسم؟",
-        address: "📍 العنوان ديالنا: Nouveau Quartier, rue 5 imm. 80 n°3 rdc Sidi Kacem.",
-        discount: "🎁 كزبون وفي لمدة سنتين، كتربح تخفيض 10%. (كيتلغى يلا كنتي مسؤول على حادثة).",
-        accident: "⚠️ في حالة حادثة: جيب لينا الكونسطا وتصاور الأضرار و Devis. غنصيفطوك للخبير ونتكلفو بالباقي.",
-        fallback: "ما فهمتش سؤالك مزيان، تقدر تسول على (الموقع، الكسيدة، أثمنة السيارات، أو الخصم).",
+        welcome: "مرحباً {name}! كيف نقدر نعاونك بخصوص تأمين السيارات، الحوادث، أو العروض المتوفرة؟",
         keys: [
-            { k: ["سلام", "salam", "mrhba"], r: "وعليكم السلام! كيف نقدر نعاونك؟" },
-            { k: ["موقع", "عنوان", "adresse", "فين جات"], r: "📍 العنوان: Nouveau Quartier, rue 5 imm. 80 n°3 rdc Sidi Kacem." },
-            { k: ["سيارة", "طوموبيل", "auto"], r: "🚗 عندنا أفضل عروض تأمين السيارات والموتورات في سيدي قاسم." }
-        ]
+            { words: ["سلام", "salam", "mrhba", "اهلا"], reply: "وعليكم السلام! وكالة سيدي قاسم ترحب بك. كيف نقدر نعاونك؟" },
+            { words: ["موقع", "فين جات", "عنوان", "بلاصة"], reply: "📍 وكالتنا كاينة في: Nouveau Quartier, rue 5 imm. 80 n°3 rdc Sidi Kacem." },
+            { words: ["سيارة", "طوموبيل", "auto", "voiture"], reply: "🚗 كنعطيوك أحسن ثمن لتأمين سيارتك. جيب لينا Carte Grise للوكالة ونعطيوك Devis فالحين." },
+            { words: ["حادث", "كسيدة", "accident", "constat"], reply: "⚠️ الله يحفظ! الإجراءات: جيب الكونسطا وتصاور الأضرار. حنا كنتكلفو بالخبير والتعويض." },
+            { words: ["خصم", "تخفيض", "وفاء", "10%"], reply: "🎁 كزبون وفي (سنتين بدون حوادث مسؤولة)، عندك خصم 10% على تأمينك." },
+            { words: ["هاتف", "نمرة", "تلفون", "اتصال"], reply: "📞 تقدر تتصل بنا مباشرة على: 0537595910" }
+        ],
+        fallback: "ما فهمتش السؤال مزيان. تقدر تسول على (الموقع، السيارات، الحوادث، أو الخصم)."
     },
     fr: {
-        welcome: "Bonjour {name}! Comment puis-je vous aider avec nos services d'assurance à Sidi Kacem ?",
-        address: "📍 Notre adresse: Nouveau Quartier, rue 5 imm. 80 n°3 rdc Sidi Kacem.",
-        discount: "🎁 10% de réduction après 2 ans de fidélité (Annulée en cas de responsabilité).",
-        accident: "⚠️ En cas d'accident: Apportez le constat + photos + devis. Nous gérons l'expert et le remboursement.",
-        fallback: "Je n'ai نه pas compris. Essayez de demander (Adresse, Accident, Auto, ou Réduction).",
+        welcome: "Bienvenue {name} ! Comment puis-je vous aider (Assurance Auto, Sinistres, Réductions) ?",
         keys: [
-            { k: ["bonjour", "salut", "hi"], r: "Bonjour! En quoi puis-je vous être utile ?" },
-            { k: ["adresse", "lieu", "ou est"], r: "📍 Adresse: Nouveau Quartier, rue 5 imm. 80 n°3 rdc Sidi Kacem." },
-            { k: ["auto", "voiture", "assurance"], r: "🚗 Nous offrons les meilleures couvertures auto et moto." }
-        ]
+            { words: ["bonjour", "salut", "hi", "bonsoir"], reply: "Bonjour ! Bienvenue à l'agence de Sidi Kacem. En quoi puis-je vous aider ?" },
+            { words: ["adresse", "lieu", "ou est", "emplacement"], reply: "📍 Notre agence est située à : Nouveau Quartier, rue 5 imm. 80 n°3 rdc Sidi Kacem." },
+            { words: ["auto", "voiture", "assurance"], reply: "🚗 Nous proposons les meilleures offres auto. Présentez votre Carte Grise à l'agence pour un devis." },
+            { words: ["accident", "sinistre", "constat"], reply: "⚠️ En cas d'accident : Apportez le constat et les photos. Nous gérons l'expertise et le remboursement." },
+            { words: ["reduction", "remise", "10%", "fidelite"], reply: "🎁 Bénéficiez de 10% de réduction après 2 ans de fidélité sans sinistre responsable." },
+            { words: ["contact", "telephone", "appel"], reply: "📞 Vous pouvez nous joindre au : 0537595910" }
+        ],
+        fallback: "Je n'ai pas bien compris. Demandez (Adresse, Auto, Accident ou Réduction)."
     }
 };
 
-function initChat() {
+/* ================= LOGIC ================= */
+function submitData() {
     const name = document.getElementById('reg-name').value;
     const phone = document.getElementById('reg-phone').value;
     const lang = document.getElementById('reg-lang').value;
 
-    if (!name || !phone || !lang) {
-        alert("المرجو ملء جميع الخانات | Veuillez remplir tous les champs");
-        return;
-    }
+    if (!name || !phone) return alert("المرجو إدخال جميع البيانات!");
 
     userData = { name, phone, lang };
 
-    // ارسال البيانات
+    // إرسال عبر EmailJS
     emailjs.send("service_imrv3a3", "template_sjqjicl", {
         message: `Client: ${name}, Phone: ${phone}, Lang: ${lang}`,
         user_name: name
     });
 
-    document.getElementById('welcome-screen').style.opacity = '0';
-    setTimeout(() => {
-        document.getElementById('welcome-screen').style.display = 'none';
-        document.getElementById('chat-interface').style.display = 'flex';
-        const msg = DB[lang].welcome.replace("{name}", name);
-        appendMsg(msg, 'bot');
-    }, 800);
+    // إخفاء الفورم وإظهار منطقة الكتابة
+    document.getElementById('form-container').style.display = 'none';
+    document.getElementById('input-zone').style.display = 'flex';
+
+    const welcomeMsg = keywordsDB[lang].welcome.replace("{name}", name);
+    appendMsg(welcomeMsg, 'bot');
 }
 
-function sendMessage() {
+function handleMsg() {
     const input = document.getElementById('user-input');
     const text = input.value.trim().toLowerCase();
     if (!text) return;
@@ -202,24 +181,17 @@ function sendMessage() {
     appendMsg(text, 'user');
     input.value = '';
 
-    let response = DB[userData.lang].fallback;
-    
-    // محرك البحث في القاعدة المختارة
-    const currentDB = DB[userData.lang];
+    const currentDB = keywordsDB[userData.lang];
+    let reply = currentDB.fallback;
 
-    if (text.includes("موقع") || text.includes("adresse")) response = currentDB.address;
-    else if (text.includes("حادث") || text.includes("accident") || text.includes("كسيدة")) response = currentDB.accident;
-    else if (text.includes("خصم") || text.includes("تخفيض") || text.includes("reduction") || text.includes("10%")) response = currentDB.discount;
-    else {
-        for(let entry of currentDB.keys) {
-            if(entry.k.some(key => text.includes(key))) {
-                response = entry.r;
-                break;
-            }
+    for (let entry of currentDB.keys) {
+        if (entry.words.some(w => text.includes(w))) {
+            reply = entry.reply;
+            break;
         }
     }
 
-    setTimeout(() => appendMsg(response, 'bot'), 600);
+    setTimeout(() => appendMsg(reply, 'bot'), 500);
 }
 
 function appendMsg(text, type) {
@@ -230,6 +202,9 @@ function appendMsg(text, type) {
     box.appendChild(div);
     box.scrollTop = box.scrollHeight;
 }
+
+document.getElementById('user-input').addEventListener('keypress', (e) => { if(e.key==='Enter') handleMsg(); });
 </script>
+
 </body>
 </html>
