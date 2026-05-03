@@ -4,15 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AtlantaSanad 3D AI - Sidi Kacem</title>
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
-    <script type="text/javascript">(function(){ emailjs.init("vk3TsCj2TbhWy2OOB"); })();</script>
     
     <style>
         :root { 
             --blue: #006EB7; 
             --blue-light: #008be6;
             --accent: #3fb950; 
-            --glass-bg: rgba(22, 27, 34, 0.65);
+            --glass-bg: rgba(22, 27, 34, 0.75);
             --glass-border: rgba(255, 255, 255, 0.1);
         }
         
@@ -21,36 +19,30 @@
             margin: 0; 
             display: flex; justify-content: center; align-items: center; 
             min-height: 100vh; 
-            /* خلفية متدرجة حديثة */
             background: linear-gradient(135deg, #0d1117 0%, #1a2333 50%, #0d1117 100%);
             color: white; 
             overflow: hidden;
         }
 
-        /* تأثيرات 3D والزجاج الشفاف */
         #chat-screen { 
             width: 95%; max-width: 550px; 
             background: var(--glass-bg); 
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
             border-radius: 24px; 
             padding: 20px; 
             height: 90vh; 
             display: flex; flex-direction: column; 
             border: 1px solid var(--glass-border); 
-            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5), inset 0 0 0 1px rgba(255, 255, 255, 0.05);
-            transform: translateZ(0);
-            transition: all 0.3s ease;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
         }
 
         .header { 
             display: flex; align-items: center; gap: 15px; 
             padding-bottom: 15px; 
             border-bottom: 1px solid var(--glass-border); 
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
         }
         
-        /* حركة بسيطة للوجو */
         .header img {
             width: 75px;
             filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.4));
@@ -69,75 +61,50 @@
             scrollbar-width: thin;
         }
 
-        /* رسائل 3D */
         .message { 
             padding: 14px 18px; border-radius: 20px; 
             max-width: 85%; line-height: 1.6; font-size: 0.95rem; word-wrap: break-word; 
             box-shadow: 0 8px 20px rgba(0,0,0,0.2);
-            position: relative;
-            animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            animation: popIn 0.3s ease-out;
         }
 
         @keyframes popIn {
-            0% { opacity: 0; transform: scale(0.8) translateY(10px); }
-            100% { opacity: 1; transform: scale(1) translateY(0); }
+            0% { opacity: 0; transform: translateY(10px); }
+            100% { opacity: 1; transform: translateY(0); }
         }
 
         .bot-msg { 
             background: linear-gradient(145deg, #21262d, #161b22); 
-            align-self: flex-start; 
-            border-bottom-left-radius: 4px; 
+            align-self: flex-start; border-bottom-right-radius: 20px; border-bottom-left-radius: 4px; 
             border: 1px solid #30363d; 
         }
 
         .user-msg { 
             background: linear-gradient(145deg, var(--blue), var(--blue-light)); 
-            align-self: flex-end; 
-            border-bottom-right-radius: 4px; 
-            box-shadow: 0 8px 20px rgba(0, 110, 183, 0.3);
+            align-self: flex-end; border-bottom-left-radius: 20px; border-bottom-right-radius: 4px; 
         }
 
-        /* أزرار الخيارات 3D */
         .options { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 12px; }
         .opt-btn { 
-            background: rgba(0, 110, 183, 0.1); 
-            border: 1px solid var(--blue); 
-            color: #66b3ff; 
-            padding: 8px 14px; 
-            border-radius: 12px; cursor: pointer; font-size: 0.85rem; 
-            transition: all 0.2s ease;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            background: rgba(0, 110, 183, 0.1); border: 1px solid var(--blue); color: #66b3ff; 
+            padding: 8px 14px; border-radius: 12px; cursor: pointer; font-size: 0.85rem; transition: all 0.2s ease;
         }
-        .opt-btn:hover { 
-            background: var(--blue); color: white; 
-            transform: translateY(-3px) scale(1.05); 
-            box-shadow: 0 8px 20px rgba(0, 110, 183, 0.4);
-        }
+        .opt-btn:hover { background: var(--blue); color: white; transform: translateY(-2px); }
 
-        /* منطقة الإدخال */
         .input-area { display: flex; gap: 10px; padding-top: 15px; }
         input { 
-            flex: 1; padding: 14px; border-radius: 14px; 
-            border: 1px solid var(--glass-border); 
-            background: rgba(0,0,0,0.3); color: white; outline: none; 
-            box-shadow: inset 0 2px 5px rgba(0,0,0,0.5);
-            transition: 0.3s;
+            flex: 1; padding: 14px; border-radius: 14px; border: 1px solid var(--glass-border); 
+            background: rgba(0,0,0,0.4); color: white; outline: none; transition: 0.3s;
         }
-        input:focus { border-color: var(--blue); background: rgba(0,0,0,0.5); }
+        input:focus { border-color: var(--blue); }
         
         .send-btn { 
-            background: linear-gradient(145deg, var(--blue), var(--blue-light)); 
-            border: none; padding: 0 24px; border-radius: 14px; 
-            color: white; font-weight: bold; cursor: pointer; 
-            box-shadow: 0 6px 15px rgba(0, 110, 183, 0.4);
-            transition: all 0.2s;
+            background: linear-gradient(145deg, var(--blue), var(--blue-light)); border: none; padding: 0 24px; 
+            border-radius: 14px; color: white; font-weight: bold; cursor: pointer; transition: all 0.2s;
         }
-        .send-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(0, 110, 183, 0.6); }
-        .send-btn:active { transform: translateY(2px); box-shadow: 0 2px 5px rgba(0, 110, 183, 0.4); }
+        .send-btn:hover { transform: translateY(-2px); }
 
         .loading { font-size: 0.85rem; color: #8b949e; display: none; margin-bottom: 5px; text-align: center; }
-        .dots::after { content: ''; animation: dots 1.5s steps(4, end) infinite; }
-        @keyframes dots { 0% { content: ''; } 25% { content: '.'; } 50% { content: '..'; } 75% { content: '...'; } 100% { content: ''; } }
     </style>
 </head>
 <body>
@@ -146,25 +113,24 @@
     <div class="header">
         <img src="https://upload.wikimedia.org/wikipedia/commons/d/d0/Logo_AtlantaSanad.png" alt="Logo">
         <div>
-            <div style="font-weight: 800; font-size: 1.1rem; text-shadow: 0 2px 4px rgba(0,0,0,0.5);">AtlantaSanad - سيدي قاسم</div>
+            <div style="font-weight: 800; font-size: 1.1rem;">AtlantaSanad - سيدي قاسم</div>
             <div style="font-size: 0.75rem; color: var(--accent); font-weight: 600;">النظام الذكي الهجين (متصل) ●</div>
         </div>
     </div>
 
     <div class="chat-box" id="chat-box">
         <div class="message bot-msg">
-            مرحباً بك في وكالة سيدي قاسم. أنا مساعدك الذكي المعتمد على قاعدة بياناتنا والذكاء الاصطناعي. كيف أساعدك؟
+            مرحباً بك في وكالة سيدي قاسم. أنا مساعدك الذكي المعتمد على قاعدة بياناتنا. كيف أساعدك؟
             <div class="options">
                 <button class="opt-btn" onclick="quickAsk('📍 فين جات الوكالة؟')">الموقع</button>
                 <button class="opt-btn" onclick="quickAsk('🚗 تأمين السيارات')">تأمين السيارات</button>
                 <button class="opt-btn" onclick="quickAsk('⚠️ إجراءات الحوادث')">إجراءات الحوادث</button>
                 <button class="opt-btn" onclick="quickAsk('🎁 خصم 10%')">عرض الوفاء</button>
-                <button class="opt-btn" onclick="quickAsk('📄 CNOPS / AMC')">التعاضدية</button>
             </div>
         </div>
     </div>
 
-    <div id="loading" class="loading">جاري معالجة طلبك<span class="dots"></span></div>
+    <div id="loading" class="loading">جاري معالجة طلبك...</div>
 
     <div class="input-area">
         <input type="text" id="user-input" placeholder="اكتب سؤالك هنا...">
@@ -173,75 +139,44 @@
 </div>
 
 <script>
-/* ================= 1. DATABASE (DB) ================= */
+/* ================= DATABASE ================= */
 const DB = {
-    company: {
-        name: "Atlantasanad Assurance",
-        address: "Nouveau Quartier, rue 5 imm. 80 n°3 rdc Sidi Kacem",
-        phone: "0537595910",
-        fax: "0537595910"
-    },
-    services: {
-        ar: ["تأمين السيارات", "تأمين الدراجات", "تأمين الدراجات ثلاثية العجلات", "تأمين المنازل", "تأمين السفر", "تأمين البناء"],
-        darija: ["تأمين ديال الطوموبيلات", "تأمين ديال الموتورات", "تأمين ديال الدار", "تأمين السفر", "تأمين البناء"],
-        fr: ["Assurance automobile", "Assurance moto", "Assurance habitation", "Assurance voyage", "Assurance construction"]
-    },
+    company: { address: "Nouveau Quartier, rue 5 imm. 80 n°3 rdc Sidi Kacem", phone: "0537595910" },
+    services: { ar: ["تأمين السيارات", "الدراجات", "الدراجات ثلاثية العجلات", "المنازل", "السفر", "البناء"] },
     rules: {
-        discount: {
-            ar: "خصم 10% بعد سنتين ولاء (يلغى إذا كنت مسؤولاً عن حادثة)",
-            darija: "كتربح 10% من بعد جوج سنين ديال الوفاء (كتحيد يلا درتي كسيدة وكنتي نتا لي غالط)",
-            fr: "10% de réduction après 2 ans de fidélité (annulée en cas de responsabilité)"
-        },
-        claim: {
-            ar: "constat + صور + devis → خبير → إصلاح → فاتورة → تعويض",
-            darija: "كتجيب constat + تصاور + devis، كتمشي عند الخبير، كتصلح، وكتجيب الفاتورة باش تعوض",
-            fr: "constat + photos + devis → expert → réparation → facture → remboursement"
-        }
+        discount: { darija: "كتربح 10% من بعد جوج سنين ديال الوفاء (كتحيد يلا درتي كسيدة وكنتي نتا لي غالط)" },
+        claim: { darija: "كتجيب constat + تصاور + devis، كتمشي عند الخبير، كتصلح، وكتجيب الفاتورة باش تعوض" }
     },
     faq: [
-        { keywords:["سيارة","car","auto","voiture"], ar:"🚗 تأمين السيارات يشمل Pack SANAD و Auto+ Raha", darija:"🚗 تأمين الطوموبيل فيه عروض زوينة بحال Pack SANAD", fr:"🚗 Assurance auto couvre accidents et vol" },
-        { keywords:["حادث","accident","ksida","كسيدة"], ar:"📄 خاصك المساعدة و constat وتقديم الصور للوكالة", darija:"📄 أول حاجة السلامة ديالك، وجيب لينا الكونسطا والتصاور", fr:"📄 constat + photos requis sous 5 jours" },
-        { keywords:["تريبورتور","triporteur","دراجة"], ar:"🏍️ نوفر تأمين خاص للدراجات النارية وثلاثية العجلات", darija:"🏍️ كاين تأمين الموتورات والتريبورتورات بأثمنة مناسبة", fr:"🏍️ Assurance moto et triporteurs disponible" },
-        { keywords:["cnops","amc","التعاضدية"], ar:"📄 نقوم بـ Gestion des adhésions و déclaration des amc", darija:"📄 كنصاوبو الملفات ديال المنخرطين و AMC/CNOPS", fr:"📄 Gestion adhésions et déclaration AMC (CNOPS)" }
+        { keywords:["سيارة","car","auto"], darija:"🚗 تأمين الطوموبيل فيه عروض زوينة بحال Pack SANAD" },
+        { keywords:["حادث","accident","ksida","كسيدة"], darija:"📄 أول حاجة السلامة، وجيب لينا الكونسطا والتصاور في 5 أيام" },
+        { keywords:["تريبورتور","triporteur","دراجة"], darija:"🏍️ كاين تأمين الموتورات والتريبورتورات بأثمنة مناسبة" }
     ]
 };
 
-// وضع المفتاح والموديل المحددين
 const OPENROUTER_KEY = "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"; 
 const LLM_MODEL = "arcee-ai/trinity-large-preview:free";
-let currentLang = "darija"; 
 
-/* ================= 2. ENGINE (HYBRID) ================= */
-function engine(msg, lang) {
+/* ================= ENGINE ================= */
+function engine(msg) {
     msg = msg.toLowerCase().trim();
-
     for (const item of DB.faq) {
-        for (const key of item.keywords) {
-            if (msg.includes(key)) return item[lang] || item.ar;
-        }
+        for (const key of item.keywords) { if (msg.includes(key)) return item.darija; }
     }
-
     const rulesMap = [
-        { check: ["خصم", "discount", "reduction", "وفاء"], data: DB.rules.discount },
-        { check: ["حادث", "accident", "تعويض", "كسيدة"], data: DB.rules.claim },
-        { check: ["خدمة", "services", "خدمات"], data: DB.services }
+        { check: ["خصم", "discount", "وفاء", "10%"], data: DB.rules.discount.darija },
+        { check: ["حادث", "تعويض", "كسيدة"], data: DB.rules.claim.darija },
+        { check: ["خدمة", "services"], data: DB.services.ar.join(" | ") }
     ];
-
     for (const rule of rulesMap) {
-        for (const k of rule.check) {
-            if (msg.includes(k)) {
-                return Array.isArray(rule.data[lang]) ? rule.data[lang].join("<br>• ") : rule.data[lang];
-            }
-        }
+        for (const k of rule.check) { if (msg.includes(k)) return rule.data; }
     }
-
-    if (msg.includes("موقع") || msg.includes("عنوان") || msg.includes("adresse")) return "📍 " + DB.company.address;
-    if (msg.includes("هاتف") || msg.includes("phone") || msg.includes("اتصال")) return "📞 " + DB.company.phone + " | Fax: " + DB.company.fax;
-
+    if (msg.includes("موقع") || msg.includes("عنوان")) return "📍 " + DB.company.address;
+    if (msg.includes("هاتف") || msg.includes("اتصال")) return "📞 " + DB.company.phone;
     return null; 
 }
 
-/* ================= 3. UI HANDLERS ================= */
+/* ================= UI HANDLERS ================= */
 function quickAsk(text) {
     document.getElementById('user-input').value = text;
     handleInput();
@@ -257,35 +192,51 @@ async function handleInput() {
     const loading = document.getElementById('loading');
     loading.style.display = 'block';
 
-    const engineResult = engine(text, currentLang);
+    const engineResult = engine(text);
 
     if (engineResult) {
         setTimeout(() => {
             loading.style.display = 'none';
             appendMessage(engineResult, 'bot-msg');
-        }, 600);
+        }, 500);
     } else {
         try {
             const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
                 method: "POST",
-                headers: { "Authorization": `Bearer ${OPENROUTER_KEY}`, "Content-Type": "application/json" },
+                headers: { 
+                    "Authorization": `Bearer ${OPENROUTER_KEY}`, 
+                    "Content-Type": "application/json",
+                    "HTTP-Referer": window.location.href, // ضروري لـ OpenRouter
+                    "X-Title": "AtlantaSanad Sidi Kacem" // ضروري لـ OpenRouter
+                },
                 body: JSON.stringify({
                     model: LLM_MODEL,
                     messages: [
-                        { role: "system", content: `نتا هو مساعد ذكي لوكالة AtlantaSanad بسيدي قاسم. العنوان: ${DB.company.address}. الخدمات: ${DB.services.ar.join(', ')}. قانون الوفاء: خصم 10% بعد سنتين وتلغى عند الحوادث المسؤولة. جاوب بالدارجة المغربية بأسلوب احترافي قصير.` },
+                        { role: "system", content: `أجب باختصار بالدارجة المغربية كخبير وكالة أطلنطا سند بسيدي قاسم. العنوان: ${DB.company.address}` },
                         { role: "user", content: text }
                     ]
                 })
             });
             
-            if(!response.ok) throw new Error("API Error");
+            if(!response.ok) {
+                const errDetail = await response.json();
+                console.error("OpenRouter Error:", errDetail);
+                throw new Error("API Error");
+            }
             
             const data = await response.json();
             loading.style.display = 'none';
-            appendMessage(data.choices[0].message.content, 'bot-msg');
+            
+            if(data.choices && data.choices.length > 0) {
+                appendMessage(data.choices[0].message.content, 'bot-msg');
+            } else {
+                appendMessage("عذراً، لم أتلقَ رداً واضحاً.", 'bot-msg');
+            }
+            
         } catch (e) {
+            console.error("Fetch Exception:", e);
             loading.style.display = 'none';
-            appendMessage("عذراً، وقع خطأ في الشبكة. تواصل معنا عبر الفاكس: " + DB.company.phone, 'bot-msg');
+            appendMessage("عذراً، الموديل المجاني عليه ضغط حالياً أو هناك مشكل في الاتصال. تواصل معنا عبر: " + DB.company.phone, 'bot-msg');
         }
     }
 }
@@ -299,7 +250,6 @@ function appendMessage(text, className) {
     chatBox.scrollTop = chatBox.scrollHeight;
 }
 
-// دعم الضغط على زر Enter للارسال
 document.getElementById('user-input').addEventListener('keypress', function (e) {
     if (e.key === 'Enter') handleInput();
 });
